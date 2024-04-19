@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../routs/navigation_mials_screen.dart';
+import '../routs/Category_mials_screen.dart';
 
 class CategoryItem extends StatelessWidget {
   //const CategoryItem({super.key});

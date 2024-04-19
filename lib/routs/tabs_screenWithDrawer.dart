@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
 
+import 'package:different_screen_spp/models/Meals.dart';
 import 'package:different_screen_spp/widgets/main_drawer.dart';
 import '../widgets/myHomePage.dart';
 import '../routs/favorite_screen.dart';
 
 class TabsScreen extends StatefulWidget {
+  final List<Meal> favoriteMeals;
+  TabsScreen(this.favoriteMeals);
   State<StatefulWidget> createState() => _TabsScreenState();
 }
 //const TabsScreen({super.key});
 
 class _TabsScreenState extends State<TabsScreen> {
-  final List<Map<String, Object>> _pages = [
-    {
-      "page": HomePage(),
-      "title": "Categories",
-      "icon": const ElevatedButton(
-        onPressed: null,
-        child: Text("Elevated button "),
-      )
-    },
-    {
-      "page": FavoriteScreen(),
-      "title": "Favorites",
-      "icon": const ElevatedButton(
-        onPressed: null,
-        child: Text("Elevated button "),
-      )
-    }
-  ];
+  List<Map<String, Object>>? _pages;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // _pages = [
+    _pages = [
+      {
+        "page": HomePage(),
+        "title": "Categories",
+        "icon": const ElevatedButton(
+          onPressed: null,
+          child: Text("Elevated button "),
+        )
+      },
+      {
+        "page": FavoriteScreen(widget.favoriteMeals),
+        "title": "Favorites",
+        "icon": const ElevatedButton(
+          onPressed: null,
+          child: Text("Elevated button "),
+        )
+      }
+    ];
+    super.initState();
+  }
 
   int _selectePageIndex = 0;
 
@@ -44,13 +55,13 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(_pages[_selectePageIndex]['title'] as String),
+        title: Text(_pages![_selectePageIndex]['title'] as String),
       ),
       ////////////// Drawer Here////////////////
       drawer: MainDrawer(),
 
       ////////////// Body Here////////////////
-      body: _pages[_selectePageIndex]['page'] as Widget,
+      body: _pages![_selectePageIndex]['page'] as Widget,
 
       ////////////// bottomNavigationBar Here////////////////
       bottomNavigationBar: BottomNavigationBar(

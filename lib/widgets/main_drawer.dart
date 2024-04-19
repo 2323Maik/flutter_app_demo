@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../routs/filtersScreen.dart';
+
 class MainDrawer extends StatelessWidget {
   //const MyWidget({super.key});
 
-  Widget buildListTil(BuildContext context, String title, IconData icon) {
+  Widget buildListTil(
+      BuildContext context, String title, IconData icon, Function tabHandler) {
     return ListTile(
       hoverColor: const Color.fromRGBO(230, 230, 230, 1),
       leading: Icon(
@@ -19,13 +22,15 @@ class MainDrawer extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-      onTap: () {},
+      onTap: () => tabHandler(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      //surfaceTintColor: Colors.amber,
+
       width: MediaQuery.of(context).size.width * 0.7,
       child: Column(
         children: [
@@ -43,8 +48,13 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
           ),
-          buildListTil(context, "Meals", Icons.restaurant),
-          buildListTil(context, "Filters", Icons.settings)
+          buildListTil(context, "Meals", Icons.restaurant, () {
+            ////////////////// use  pushReplacementNamed insted of pushNamed to delete stack////////////////
+            Navigator.of(context).pushReplacementNamed('/');
+          }),
+          buildListTil(context, "Filters", Icons.settings, () {
+            Navigator.of(context).pushReplacementNamed(FiltersScreen.routeName);
+          })
         ],
       ),
     );

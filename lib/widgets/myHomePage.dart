@@ -1,4 +1,4 @@
-import 'package:different_screen_spp/routs/navigation_screen.dart';
+import '../routs/Category_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

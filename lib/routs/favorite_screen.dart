@@ -1,6 +1,9 @@
+import 'package:different_screen_spp/models/Meals.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteScreen extends StatefulWidget {
+  final List<Meal> favoriteMeals;
+  FavoriteScreen(this.favoriteMeals);
   //const FavoriteScreen({super.key});
 
   @override
