@@ -51,6 +51,21 @@ class DiffScreenAppState extends State<DiffScreenApp> {
     });
   }
 
+  void _toggleFavorite(String mealId) {
+    final existingIndex =
+        _favoriteMeals.indexWhere((element) => element.id == mealId);
+    if (existingIndex >= 0) {
+      _favoriteMeals.removeAt(existingIndex);
+    } else {
+      _favoriteMeals
+          .add(DUMMY_MEALS.firstWhere((element) => element.id == mealId));
+    }
+  }
+
+  bool _isFavoriteMeal(String id) {
+    return _favoriteMeals.any((element) => element.id == id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,7 +105,8 @@ class DiffScreenAppState extends State<DiffScreenApp> {
         '/': (context) => TabsScreen(_favoriteMeals),
         NavigationMialsScreen.routeName: (context) =>
             NavigationMialsScreen(_availableMeals),
-        MealDetailScreen.routeName: (context) => MealDetailScreen(),
+        MealDetailScreen.routeName: (context) =>
+            MealDetailScreen(_toggleFavorite, _isFavoriteMeal),
         FiltersScreen.routeName: (context) =>
             FiltersScreen(_filters, _setFilters),
       },

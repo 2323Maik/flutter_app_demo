@@ -60,7 +60,7 @@ class NavigationMialsScreenState extends State<NavigationMialsScreen> {
                 id: displayedMeal[index].id,
                 imageUrl: displayedMeal[index].imageUrl,
                 title: displayedMeal[index].title,
-                removeItem: removeMeals,
+                //removeItem: removeMeals,
               ),
             );
           },

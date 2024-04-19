@@ -8,9 +8,14 @@ class MealDetailScreen extends StatelessWidget {
   //const MealDetail({super.key});
   static const routeName = '/meal-details';
 
+  final Function toggleFavorite;
+  final Function isFavoriteMeal;
+
+  MealDetailScreen(this.toggleFavorite, this.isFavoriteMeal);
+
   Widget buildTextContiner(BuildContext context, String text) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.05,
       width: double.infinity,
       // padding: const EdgeInsets.symmetric(vertical: 5),
       child: Text(
@@ -23,7 +28,7 @@ class MealDetailScreen extends StatelessWidget {
 
   Widget buildContiner(BuildContext context, Widget child) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.25,
       width: MediaQuery.of(context).size.width * 0.92,
       decoration: BoxDecoration(
           color: Colors.white,
@@ -37,8 +42,7 @@ class MealDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
     final mealId = args['id'];
     final selectedMeals = DUMMY_MEALS.firstWhere((meal) => meal.id == mealId);
 
@@ -51,68 +55,66 @@ class MealDetailScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: selectedMeals.id.isEmpty
-            ? Text("No date")
-            : Column(children: [
-                ///// Container for Image  ///////////////////////////
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.30,
-                  width: double.infinity,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        child: Column(children: [
+          ///// Container for Image  ///////////////////////////
+          Container(
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: double.infinity,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            child: Image.network(
+              selectedMeals.imageUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          ///// Container for Ingredient Text ///////////////////////////
+          buildTextContiner(context, 'Ingredients'),
+          ///// Container for Ingredient list ///////////////////////////
+          buildContiner(
+              context,
+              ListView.builder(
+                itemBuilder: ((ctx, index) {
+                  return Card(
+                      color: Theme.of(context).secondaryHeaderColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 5),
+                        child: Text(
+                          '${index + 1}. ${selectedMeals.ingredients[index]}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ));
+                }),
+                itemCount: selectedMeals.ingredients.length,
+              )),
+          ///// Container for Step Text ///////////////////////////
+          buildTextContiner(context, 'Steps'),
+          ///// Container for Step list ///////////////////////////
+          buildContiner(
+              context,
+              ListView.builder(
+                itemBuilder: (ctx, index) => Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                  child: Image.network(
-                    selectedMeals.imageUrl,
-                    fit: BoxFit.cover,
+                      const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      maxRadius: 18,
+                      backgroundColor: Theme.of(context).primaryColorLight,
+                      child: Text('${index + 1}'),
+                    ),
+                    title: Text(
+                      ' ${selectedMeals.steps[index]}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 ),
-
-                ///// Container for Ingredient Text ///////////////////////////
-                buildTextContiner(context, 'Ingredients'),
-                ///// Container for Ingredient list ///////////////////////////
-                buildContiner(
-                    context,
-                    ListView.builder(
-                      itemBuilder: ((ctx, index) {
-                        return Card(
-                            color: Theme.of(context).secondaryHeaderColor,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 2, horizontal: 5),
-                              child: Text(
-                                '${index + 1}. ${selectedMeals.ingredients[index]}',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ));
-                      }),
-                      itemCount: selectedMeals.ingredients.length,
-                    )),
-                ///// Container for Step Text ///////////////////////////
-                buildTextContiner(context, 'Steps'),
-                ///// Container for Step list ///////////////////////////
-                buildContiner(
-                    context,
-                    ListView.builder(
-                      itemBuilder: (ctx, index) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            maxRadius: 18,
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            child: Text('${index + 1}'),
-                          ),
-                          title: Text(
-                            ' ${selectedMeals.steps[index]}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ),
-                      itemCount: selectedMeals.steps.length,
-                    )),
-              ]),
+                itemCount: selectedMeals.steps.length,
+              )),
+          const SizedBox(
+            height: 70,
+          )
+        ]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
@@ -131,8 +133,11 @@ class MealDetailScreen extends StatelessWidget {
               FloatingActionButton(
                 //backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
                 backgroundColor: Colors.amberAccent,
-                child: const Icon(Icons.star),
-                onPressed: () {},
+                child: Icon(
+                  color: Colors.blueAccent,
+                  isFavoriteMeal(mealId) ? Icons.star : Icons.star_border,
+                ),
+                onPressed: () => toggleFavorite(mealId),
               ),
             ],
           )),
